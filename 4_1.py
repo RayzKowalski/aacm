@@ -1,36 +1,57 @@
-# Лагранж. НУЖНО РЕДАКТИРОВАТЬ ПОД СЕБЯ!
+import numpy as np
 
-def lagrange_interpolation(xi, yi, x):
-    """
-    Функция для вычисления значения интерполяционного многочлена Лагранжа в точке x.
+class LagrangeInterpolation:
+    def __init__(self, x_values, y_values):
+        self.x_values = x_values
+        self.y_values = y_values
 
-    Аргументы:
-    xi: Список значений x.
-    yi: Список значений y.
-    x: Точка, в которой нужно вычислить значение многочлена.
+    def interpolate(self, x):
+        n = len(self.x_values)
+        result = 0.0
+        for i in range(n):
+            term = self.y_values[i]
+            for j in range(n):
+                if i != j:
+                    term *= (x - self.x_values[j]) / (self.x_values[i] - self.x_values[j])
+            result += term
+        return result
 
-    Возвращает:
-    Значение интерполяционного многочлена Лагранжа в точке x.
-    """
-    n = len(xi)
-    result = 0
-    for i in range(n):
-        term = yi[i]
-        for j in range(n):
-            if i != j:
-                term *= (x - xi[j]) / (xi[i] - xi[j])
-        result += term
-    return result
+def plot_interpolation(x_values, y_values):
+    import matplotlib.pyplot as plt
 
-# Заданные точки
-xi = [1, 2, 3, 4, 5]
-yi = [1.1, 1.55, 1.9, 2.25, 2.5]
+    # Создание объекта для интерполяции
+    lagrange_interpolator = LagrangeInterpolation(x_values, y_values)
 
-# Ввод значения x с клавиатуры
-x = float(input("Введите значение x для вычисления интерполяционного многочлена Лагранжа: "))
+    # Точки для интерполяции
+    interpolation_points = np.linspace(min(x_values), max(x_values), 100)  # Генерация точек для более плавного графика
 
-# Вычисление значения интерполяционного многочлена Лагранжа в точке x
-result = lagrange_interpolation(xi, yi, x)
-print("Значение интерполяционного многочлена Лагранжа в точке", x, ":", result)
+    # Интерполяция
+    interpolated_values = [lagrange_interpolator.interpolate(point) for point in interpolation_points]
 
-#добавить график
+    # Построение графика
+    plt.plot(x_values, y_values, 'o', label='Табличные значения')  # Точки данных
+    plt.plot(interpolation_points, interpolated_values, label='Интерполяция Лагранжа')  # Интерполированные значения
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('Интерполяция Лагранжа')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# Пример использования
+if __name__ == "__main__":
+    # Табличные значения
+    x_values = np.array([1, 2, 3, 4, 5])
+    y_values = np.array([5.1, 4.4, 3.2, 2.7, 2.55])
+
+    # Вывод таблицы значений
+    print("Табличные значения:")
+    for x, y in zip(x_values, y_values):
+        print(f"x={x}, y={y}")
+
+    # Проверка, нужно ли построить график
+    plot_choice = input("Построить график интерполяции? ( + / - ): ").strip().lower()
+    if plot_choice == "+":
+        plot_interpolation(x_values, y_values)
+    elif plot_choice != "-":
+        print("Error.")
