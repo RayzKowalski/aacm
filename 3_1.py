@@ -1,10 +1,15 @@
 import numpy as np
+import sympy as sp
 
+# Определение функции
 def f(x):
     return x - 1 / np.tan(x)
 
-def df(x):
-    return 1 + 1 / np.sin(x)**2
+# Используем sympy для автоматического вычисления производной
+x = sp.symbols('x')
+f_sym = x - 1 / sp.tan(x)
+df_sym = sp.diff(f_sym, x)
+df = sp.lambdify(x, df_sym, 'numpy')
 
 def combined_method(func, df, a, b, tol=1e-4, max_iter=100):
     for _ in range(max_iter):
