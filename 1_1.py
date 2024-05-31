@@ -20,7 +20,8 @@ def runge_rule(func, a, b, n, tol):
         return runge_rule(func, a, b, 2 * n, tol)
 
 a = 0  # Начальный предел интегрирования
-b = np.pi / 2  # Конечный предел интегрирования
-tolerance = 1e-6  # Заданная точность
+b = 3  # Конечный предел интегрирования
+tolerance = 1e-3  # Заданная точность
 result = runge_rule(f, a, b, 2, tolerance)
 print("Результат:", result)
+
